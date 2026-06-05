@@ -1,0 +1,12 @@
+---
+- name: Test NetBox Inventory
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Ping test
+      ping:
+
+    - name: Display Inventory Information
+      debug:
+        msg: "Host: {{ inventory_hostname }} - IP: {{ ansible_host }}"

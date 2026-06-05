@@ -1,0 +1,12 @@
+---
+- name: GENERATE DEVICE CONFIGS
+  hosts: platforms_eos
+  connection: "local"
+  roles:  
+    - arista_render_config
+  tasks:
+    - name: "Push CONFIGS"
+      arista.eos.eos_config:
+        src: "configs/{{ inventory_hostname }}.cfg"
+        save_when: changed
+

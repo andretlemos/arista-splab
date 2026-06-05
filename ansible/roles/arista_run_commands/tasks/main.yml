@@ -1,0 +1,14 @@
+- name: Print IS-IS
+  ansible.builtin.debug:
+    msg: "Router {{ inventory_hostname }} will run IS-IS"
+  tags: [isis, routing]
+
+- name: Print BGP
+  ansible.builtin.debug:
+    msg: "Router {{ inventory_hostname }} will run BGP"
+  tags: [bgp, routing]
+
+- name: Print NTP
+  ansible.builtin.debug:
+    msg: "Router {{ inventory_hostname }} will run NTP"
+  tags: ntp

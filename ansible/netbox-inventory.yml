@@ -1,0 +1,38 @@
+plugin: netbox.netbox.nb_inventory
+api_endpoint: http://192.168.1.10:8000
+token: "{{ lookup('env', 'NETBOX_TOKEN') }}"
+validate_certs: false
+
+config_context: true
+flatten_config_context: true
+flatten_custom_fields: true
+interfaces: true
+preserve_leading_underscore: true
+var_prefix: nb_
+
+rename_variables:
+  - pattern: tags
+    repl: netbox_inventory_tags
+  - pattern: serial
+    repl: netbox_inventory_serial
+
+
+group_by:
+  - device_roles
+  - platforms
+  - tenants
+  
+keyed_groups:
+  - key: site.slug
+    prefix: sites
+
+  - key: device_role.slug 
+    prefix: roles
+
+query_filters:
+  - has_primary_ip: true
+  - status: active
+
+compose:
+  ansible_host: primary_ip4.address | split('/') | first
+  ansible_network_os: platform.slug

@@ -1,0 +1,23 @@
+{% for interface in interfaces if interface.enabled and interface.name != "Management0"%}
+interface {{ interface.name }}
+{% if interface.type.value != "virtual"  %}
+ no switchport
+{% endif %}
+{% for ip in interface.ip_addresses | default([]) %}
+{% if ip.family.value == 4 %}
+ ip address {{ ip.address }}
+{% elif ip.family.value == 6 %}
+ ipv6 address {{ ip.address }}
+{% endif %}
+{% endfor %}
+{% if not interface.mgmt_only and 'ospf' in (interface.tags | default([])) %}
+ ip ospf 1 area 0
+{% if interface.type.value != "virtual" %} 
+ ip ospf network point-to-point
+{% endif %}
+{# {% if "mpls" in (interface.tags | default([])) %}
+mpls ldp 
+{% endif %} #}
+{% endif %}
+!
+{% endfor %}

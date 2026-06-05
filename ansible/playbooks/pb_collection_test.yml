@@ -1,0 +1,15 @@
+---
+- name: Validate Collection is working
+  hosts: platforms_eos
+  gather_facts: false
+  tasks:
+    - name: "Run a command on Arista EOS"
+      arista.eos.eos_command:
+        commands:
+          - "show version"
+      register: eos_output
+
+    - name: Show command output
+      debug:
+        var: eos_output
+ 

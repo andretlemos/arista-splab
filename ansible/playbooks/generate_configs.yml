@@ -1,0 +1,7 @@
+---
+- name: GENERATE DEVICE CONFIGS
+  hosts: platforms_eos
+  gather_facts: false
+  roles:  
+    - arista_render_config
+

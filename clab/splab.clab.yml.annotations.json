@@ -1,0 +1,114 @@
+{
+  "freeTextAnnotations": [],
+  "freeShapeAnnotations": [],
+  "trafficRateAnnotations": [],
+  "groupStyleAnnotations": [],
+  "networkNodeAnnotations": [],
+  "nodeAnnotations": [
+    {
+      "id": "p1",
+      "position": {
+        "x": 240,
+        "y": 80
+      }
+    },
+    {
+      "id": "p2",
+      "position": {
+        "x": 420,
+        "y": 80
+      }
+    },
+    {
+      "id": "p3",
+      "position": {
+        "x": 240,
+        "y": 260
+      }
+    },
+    {
+      "id": "p4",
+      "position": {
+        "x": 420,
+        "y": 260
+      }
+    },
+    {
+      "id": "pe1",
+      "position": {
+        "x": 40,
+        "y": 80
+      }
+    },
+    {
+      "id": "pe2",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "pe3",
+      "position": {
+        "x": 40,
+        "y": 260
+      }
+    },
+    {
+      "id": "pe4",
+      "position": {
+        "x": 580,
+        "y": 260
+      }
+    },
+    {
+      "id": "as1",
+      "position": {
+        "x": -120,
+        "y": 80
+      },
+      "interfacePattern": "e0/{n}"
+    },
+    {
+      "id": "as2",
+      "position": {
+        "x": 760,
+        "y": 80
+      },
+      "interfacePattern": "e0/{n}"
+    },
+    {
+      "id": "as3",
+      "position": {
+        "x": -120,
+        "y": 260
+      },
+      "interfacePattern": "e0/{n}"
+    },
+    {
+      "id": "as4",
+      "position": {
+        "x": 760,
+        "y": 260
+      },
+      "interfacePattern": "e0/{n}"
+    },
+    {
+      "id": "client1",
+      "position": {
+        "x": 40,
+        "y": 380
+      }
+    },
+    {
+      "id": "client2",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    }
+  ],
+  "edgeAnnotations": [],
+  "aliasEndpointAnnotations": [],
+  "viewerSettings": {}
+}

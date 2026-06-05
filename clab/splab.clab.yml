@@ -1,0 +1,71 @@
+name: arista-splab
+prefix: ""
+
+mgmt:
+  network: arista-splab-network
+  ipv4-subnet: 10.10.0.0/16 
+
+topology:
+  groups:
+    arista:
+      kind: arista_ceos
+      image: ceos:4.36.0.1F
+      cpu: 1
+      memory: 2G
+      
+    vm:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+    cisco:
+      kind: cisco_iol
+      image: ghcr.io/autonetops/autonetops_labs/cisco_iol
+
+      
+
+  nodes:
+    # Core (P) - AS 65000
+    p1: { group: arista, mgmt-ipv4: 10.10.10.1 }
+    p2: { group: arista, mgmt-ipv4: 10.10.10.2 }
+    p3: { group: arista, mgmt-ipv4: 10.10.10.3 }
+    p4: { group: arista, mgmt-ipv4: 10.10.10.4 }
+    # Edge (PE) - AS 65000
+    pe1: { group: arista,  mgmt-ipv4: 10.10.11.1 }
+    pe2: { group: arista,  mgmt-ipv4: 10.10.11.2 }
+    pe3: { group: arista,  mgmt-ipv4: 10.10.11.3 }
+    pe4: { group: arista,  mgmt-ipv4: 10.10.11.4 }
+    # External ASNs
+    as1: { group: cisco,  mgmt-ipv4: 10.10.1.1, startup-config: configs/as1.eos } # AS 65100
+    as2: { group: cisco,  mgmt-ipv4: 10.10.2.2, startup-config: configs/as2.eos } # AS 65200
+    as3: { group: cisco,  mgmt-ipv4: 10.10.3.3, startup-config: configs/as3.eos } # AS 65300
+    as4: { group: cisco,  mgmt-ipv4: 10.10.4.4, startup-config: configs/as4.eos } # AS 65400
+    #Clients
+    client1: 
+      kind: linux
+      exec: 
+        - ip address add 172.21.10.60/24 dev eth1
+      group: vm
+    client2: 
+      kind: linux
+      exec: 
+        - ip address add 172.22.10.60/24 dev eth1
+      group: vm
+
+  links:
+    # Core Ring
+    - endpoints: ["p1:eth1", "p2:eth1"]
+    - endpoints: ["p2:eth2", "p4:eth1"]
+    - endpoints: ["p1:eth2", "p3:eth1"]
+    - endpoints: ["p3:eth2", "p4:eth2"]
+    # PE to P
+    - endpoints: ["pe1:eth1", "p1:eth3"]
+    - endpoints: ["pe2:eth1", "p2:eth3"]
+    - endpoints: ["pe3:eth1", "p3:eth3"]
+    - endpoints: ["pe4:eth1", "p4:eth3"]
+    # eBGP Links (PE to External AS)
+    - endpoints: ["pe1:eth2", "as1:eth1"]
+    - endpoints: ["pe2:eth2", "as2:eth1"]
+    - endpoints: ["pe3:eth2", "as3:eth1"]
+    - endpoints: ["pe4:eth2", "as4:eth1"]
+    # Clients to PE
+    - endpoints: ["pe3:eth3", "client1:eth1"]
+    - endpoints: ["pe4:eth3", "client2:eth1"]
