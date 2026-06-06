@@ -1,0 +1,87 @@
+{% set loopback_ip = (interfaces | selectattr("name","equalto","Loopback0") | first).ip_addresses | selectattr("family.value","equalto",4) | first %}
+{% set loopback_ipv6 = (interfaces | selectattr("name","equalto","Loopback0") | first).ip_addresses | selectattr("family.value","equalto",6) | first %}
+{% set router_id = loopback_ip.address.split("/")[0] %}
+{% set router_id_v6 = loopback_ipv6.address.split("/")[0] %}
+
+router bgp 65500
+ router-id {{ router_id }}
+ neighbor IBGPv4 peer group
+ neighbor IBGPv4 remote-as 65500
+ neighbor IBGPv4 update-source Loopback0
+ neighbor IBGPv4 send-community 
+ neighbor IBGPv4 next-hop-self
+ !
+ neighbor IBGPv6 peer group
+ neighbor IBGPv6 remote-as 65500
+ neighbor IBGPv6 update-source Loopback0
+ neighbor IBGPv6 send-community 
+ neighbor IBGPv6 next-hop-self
+ !
+ neighbor EBGPv4 peer group
+ neighbor EBGPv4 send-community 
+ !
+ neighbor EBGPv6 peer group
+ neighbor EBGPv6 send-community 
+ !
+ {% for neighbor in ibgp.ipv4 | default([]) %}
+ {% if neighbor != router_id %}
+ neighbor {{ neighbor }} peer group IBGPv4
+ {% endif %}
+ {% endfor %}
+!
+ {% for neighbor in ibgp.ipv6 | default([]) %}
+ {% set n = neighbor.split("/")[0] %}
+ {% if n != router_id_v6 %}
+ neighbor {{ n }} peer group IBGPv6
+ {% endif %}
+ {% endfor %}
+!
+ {% for session in bgp_sessions | default([]) %}
+ {% if session.remote_as != session.local_as.asn %}
+ {% set remote = session.remote_address.address | default(session.remote_address) %}
+ {% set local  = session.local_address.address  | default(session.local_address) %}
+ {% set neighbor_ip = remote.split("/")[0] %}
+ {% set is_ipv6 = ":" in neighbor_ip %}
+ {% if not is_ipv6 %}
+ neighbor {{ neighbor_ip }} peer group EBGPv4
+ neighbor {{ neighbor_ip }} remote-as {{ session.remote_as.asn }}
+ {% else %}
+ neighbor {{ neighbor_ip }} peer group EBGPv6
+ neighbor {{ neighbor_ip }} remote-as {{ session.remote_as.asn }}
+ {% endif %}
+ {% endif %}
+ {% endfor %}
+!
+ address-family ipv4
+   neighbor IBGPv4 activate
+   redistribute ospf 
+   {% for session in bgp_sessions | default([]) %}
+   {% set remote = session.remote_address.address | default(session.remote_address) %}
+   {% if ":" not in remote %}
+   {% set neighbor_ip = remote.split("/")[0] %}
+   neighbor {{ neighbor_ip }} activate
+   {% endif %}
+   {% endfor %}   
+   network 172.21.10.0 mask 255.255.255.0
+   network 172.21.20.0 mask 255.255.255.0
+   aggregate-address 192.168.100.0 255.255.254.0 summary-only
+   aggregate-address 10.0.0.0 255.255.254.0 summary-only
+  !
+ address-family ipv6
+   neighbor IBGPv6 activate
+   redistribute ospfv3 
+  {% for session in bgp_sessions | default([]) %}
+  {% set remote = session.remote_address.address | default(session.remote_address) %}
+  {% if ":" in remote %}
+  {% set neighbor_ip = remote.split("/")[0] %}
+   neighbor {{ neighbor_ip }} activate
+  {% endif %}
+  {% endfor %}
+   aggregate-address 2001:db8:cafe::/64  summary-only
+   aggregate-address 2001:db8::/48 summary-only
+   aggregate-address 2001:db8:1::/48 summary-only
+   network 2001:db8:100:10::/64
+   network 2001:db8:100:20::/64
+!
+
+!

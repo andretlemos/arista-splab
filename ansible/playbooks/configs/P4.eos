@@ -21,18 +21,25 @@ router ospf 1
   router-id  192.168.100.4
   passive-interface Loopback0
 !
-
-
+router ospfv3 
+  router-id  192.168.100.4  
 !
+!
+#jinja2: trim_blocks=True, lstrip_blocks=True
 interface Ethernet1
  description TO_P2
  no switchport
  ip address 10.0.0.5/31
  ipv6 address 2001:db8::5/127
+ !
  
  ip ospf area 0
+ ospfv3 ipv6 area 0
  
+ !
  ip ospf network point-to-point
+ ospfv3 ipv6 network point-to-point
+ !
  
  mpls ip
 interface Ethernet2
@@ -40,10 +47,15 @@ interface Ethernet2
  no switchport
  ip address 10.0.0.7/31
  ipv6 address 2001:db8::7/127
+ !
  
  ip ospf area 0
+ ospfv3 ipv6 area 0
  
+ !
  ip ospf network point-to-point
+ ospfv3 ipv6 network point-to-point
+ !
  
  mpls ip
 interface Ethernet3
@@ -51,16 +63,26 @@ interface Ethernet3
  no switchport
  ip address 10.0.1.6/31
  ipv6 address 2001:db8:0:1::6/127
+ !
  
  ip ospf area 0
+ ospfv3 ipv6 area 0
  
+ !
  ip ospf network point-to-point
+ ospfv3 ipv6 network point-to-point
+ !
  
  mpls ip
 interface Loopback0
  description Loopback Interface
  ip address 192.168.100.4/32
  ipv6 address 2001:db8:cafe::4/128
+ !
  
  ip ospf area 0
+ ospfv3 ipv6 area 0
+ ospfv3 passive-interface
+ !
+!!
 !

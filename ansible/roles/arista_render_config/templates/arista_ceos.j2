@@ -8,3 +8,7 @@
 !
 {% include "interfaces.j2" %}
 !
+{% if ibgp is defined %}
+{% include "bgp.j2"%}
+{% endif %}
+!

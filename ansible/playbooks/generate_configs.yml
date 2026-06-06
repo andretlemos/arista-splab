@@ -2,6 +2,21 @@
 - name: GENERATE DEVICE CONFIGS
   hosts: platforms_eos
   gather_facts: false
+  pre_tasks:
+    - name: Get BGP Sessions from Netbox
+      uri:
+        url: "http://localhost:8000/api/plugins/bgp/session/?device={{ inventory_hostname }}"        
+        method: GET
+        headers:        
+          Authorization: "Token {{ lookup('env', 'NETBOX_TOKEN') }}"
+          Content-Type: "application/json"
+        validate_certs: false
+      register: nb_bgp_sessions
+
+    - name: Filter Active Sessions
+      set_fact:
+        bgp_sessions: "{{ nb_bgp_sessions.json.results | selectattr('status.value','equalto','active') | list }}"
+
   roles:  
     - arista_render_config
 
