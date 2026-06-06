@@ -1,5 +1,6 @@
 {% for interface in interfaces if interface.enabled and interface.name != "Management0"%}
 interface {{ interface.name }}
+ description {{ interface.description }}
 {% if interface.type.value != "virtual"  %}
  no switchport
 {% endif %}
@@ -10,14 +11,13 @@ interface {{ interface.name }}
  ipv6 address {{ ip.address }}
 {% endif %}
 {% endfor %}
-{% if not interface.mgmt_only and 'ospf' in (interface.tags | default([])) %}
- ip ospf 1 area 0
+{% if not interface.mgmt_only and 'ospf' in (interface.tags | default([])) %} 
+ ip ospf area 0
 {% if interface.type.value != "virtual" %} 
  ip ospf network point-to-point
 {% endif %}
-{# {% if "mpls" in (interface.tags | default([])) %}
-mpls ldp 
-{% endif %} #}
 {% endif %}
-!
+{% if not interface.mgmt_only and 'mpls' in (interface.tags | default([])) %} 
+ mpls ip
+{% endif %}
 {% endfor %}

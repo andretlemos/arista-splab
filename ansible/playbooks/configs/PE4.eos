@@ -2,6 +2,10 @@ ip routing
 ipv6 unicast-routing
 mpls ip
 !
+mpls ldp
+ router-id interface Loopback0 force  
+ no shutdown
+!!
 hostname PE4
 !
 ntp server 200.160.0.8 source Loopback0
@@ -13,7 +17,6 @@ ip name-server 9.9.9.9
 ip name-server 1.1.1.1
 ip name-server 8.8.8.8
 !
-
 router ospf 1
   router-id  192.168.101.4
   passive-interface Loopback0
@@ -22,26 +25,30 @@ router ospf 1
 
 !
 interface Ethernet1
+ description TO_P4
  no switchport
  ip address 10.0.1.7/31
  ipv6 address 2001:db8:0:1::7/127
- ip ospf 1 area 0
+ 
+ ip ospf area 0
  
  ip ospf network point-to-point
-!
+ 
+ mpls ip
 interface Ethernet2
+ description TO_AS65400
  no switchport
  ip address 192.168.4.0/31
  ipv6 address 2001:db8:10:4::/127
-!
 interface Ethernet3
+ description TO_CLIENT_2
  no switchport
  ip address 172.21.20.1/24
  ipv6 address 2001:db8:100:20::1/64
-!
 interface Loopback0
- ip address 192.168.101.4/24
+ description Loopback Interface
+ ip address 192.168.101.4/32
  ipv6 address 2001:db8:cafe:1::4/64
- ip ospf 1 area 0
-!
+ 
+ ip ospf area 0
 !

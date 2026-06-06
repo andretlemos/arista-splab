@@ -7,6 +7,7 @@
   tasks:
     - name: "Push CONFIGS"
       arista.eos.eos_config:
-        src: "configs/{{ inventory_hostname }}.cfg"
+        src: "configs/{{ inventory_hostname }}.eos"
         save_when: changed
+      diff: true
 

@@ -1,7 +1,7 @@
-- name: Print IS-IS
+- name: Print OSPF
   ansible.builtin.debug:
-    msg: "Router {{ inventory_hostname }} will run IS-IS"
-  tags: [isis, routing]
+    msg: "Router {{ inventory_hostname }} will run OSPF"
+  tags: [ospf, routing]
 
 - name: Print BGP
   ansible.builtin.debug:

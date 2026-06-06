@@ -8,7 +8,7 @@
 - name: Generate Arista Configs
   ansible.builtin.template:
     src: templates/arista_ceos.j2
-    dest: configs/{{ inventory_hostname }}.cfg    
+    dest: configs/{{ inventory_hostname }}.eos    
     trim_blocks: true
     lstrip_blocks: true
   delegate_to: localhost  

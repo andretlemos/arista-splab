@@ -1,5 +1,4 @@
 {% set loopback_ip = ( interfaces | selectattr("name", "equalto", "Loopback0") | first).ip_addresses  | selectattr("family.value", "equalto", 4)  | first %}
-
 router ospf 1
   router-id  {{ loopback_ip.address.split("/")[0]  }}
   {% for interface in interfaces %}
