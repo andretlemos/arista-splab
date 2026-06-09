@@ -18,6 +18,9 @@ The main topology diagram is available as:
 
 - `arista-splab.drawio`
 
+![La Topology](clab/arista-splab.svg)
+
+
 ## Networks and ASNs
 
 | Network / Prefix | Description | ASN |
