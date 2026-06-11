@@ -43,18 +43,19 @@ line vty 0 4
  transport input ssh
 !
 interface Loopback 0
-ip address 2.2.2.2 255.255.255.255
-ipv6 address 2001:db8:200::1/128
+ ip address 2.2.2.2 255.255.255.255
+ ipv6 address 2001:db8:200::1/128 
 
 interface Ethernet0/1
-ip address 192.168.2.1 255.255.255.254
-ipv6 address 2001:db8:10:2::1/127
-no shutdown
+ ip address 192.168.2.1 255.255.255.254
+ ipv6 address 2001:db8:10:2::1/127
+ no shutdown
 
 router bgp 65200
-network 2.2.2.2 mask 255.255.255.255
-neighbor 192.168.2.0 remote-as 65500
-neighbor 2001:db8:10:2:: remote-as 65500
-address-family ipv6 unicast
-neighbor 2001:db8:10:2:: activate
+ network 2.2.2.2 mask 255.255.255.255
+ neighbor 192.168.2.0 remote-as 65500
+ neighbor 2001:db8:10:2:: remote-as 65500
+ address-family ipv6 unicast
+ neighbor 2001:db8:10:2:: activate
+ network 2001:db8:200::1/128
 end

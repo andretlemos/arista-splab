@@ -14,7 +14,7 @@ router bgp 65500
  neighbor IBGPv6 peer group
  neighbor IBGPv6 remote-as 65500
  neighbor IBGPv6 update-source Loopback0
- neighbor IBGPv6 send-community 
+ neighbor IBGPv6 send-community  
  neighbor IBGPv6 next-hop-self
  !
  neighbor EBGPv4 peer group
@@ -53,8 +53,8 @@ router bgp 65500
  {% endfor %}
 !
  address-family ipv4
-   neighbor IBGPv4 activate
-   redistribute ospf 
+   neighbor IBGPv4 activate   
+   redistribute connected
    {% for session in bgp_sessions | default([]) %}
    {% set remote = session.remote_address.address | default(session.remote_address) %}
    {% if ":" not in remote %}
@@ -67,9 +67,10 @@ router bgp 65500
    aggregate-address 192.168.100.0 255.255.254.0 summary-only
    aggregate-address 10.0.0.0 255.255.254.0 summary-only
   !
- address-family ipv6
-   neighbor IBGPv6 activate
-   redistribute ospfv3 
+ address-family ipv6 
+   neighbor IBGPv6 activate   
+   redistribute connected
+   neighbor IBGPv6 next-hop-self
   {% for session in bgp_sessions | default([]) %}
   {% set remote = session.remote_address.address | default(session.remote_address) %}
   {% if ":" in remote %}
@@ -80,8 +81,4 @@ router bgp 65500
    aggregate-address 2001:db8:cafe::/64  summary-only
    aggregate-address 2001:db8::/48 summary-only
    aggregate-address 2001:db8:1::/48 summary-only
-   network 2001:db8:100:10::/64
-   network 2001:db8:100:20::/64
-!
-
 !

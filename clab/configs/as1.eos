@@ -44,17 +44,18 @@ line vty 0 4
 !
 
 interface Loopback 0
-ip address 1.1.1.1 255.255.255.255
-ipv6 address 2001:db8:100::1/128
+ ip address 1.1.1.1 255.255.255.255
+ ipv6 address 2001:db8:100::1/128
 
 interface Ethernet0/1
-ip address 192.168.1.1 255.255.255.254
-ipv6 address 2001:db8:10:1::1/127
-no shutdown
+ ip address 192.168.1.1 255.255.255.254
+ ipv6 address 2001:db8:10:1::1/127
+ no shutdown
 
 router bgp 65100
-network 1.1.1.1 mask 255.255.255.255
-neighbor 192.168.1.0 remote-as 65500
-neighbor 2001:db8:10:1:: remote-as 65500
-address-family ipv6 unicast
-neighbor 2001:db8:10:1:: activate
+ network 1.1.1.1 mask 255.255.255.255
+ neighbor 192.168.1.0 remote-as 65500
+ neighbor 2001:db8:10:1:: remote-as 65500
+ address-family ipv6 unicast
+ neighbor 2001:db8:10:1:: activate
+ network 2001:db8:100::1/128
