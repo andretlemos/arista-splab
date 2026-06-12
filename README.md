@@ -50,11 +50,15 @@ The main topology diagram is available as:
    ```bash
    containerlab deploy --topo clab/splab.clab.yml
    ```
-2. Generate configs from NetBox BGP data:
+2. Import the variables
+```bash
+  source ansible/.env
+```
+3. Generate configs from NetBox BGP data:
    ```bash
    ansible-playbook ansible/playbooks/generate_configs.yml
    ```
-3. Push configs to devices:
+4. Push configs to devices:
    ```bash
    ansible-playbook ansible/playbooks/pb_push_configs.yml
    ```
